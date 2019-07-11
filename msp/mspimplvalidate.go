@@ -15,10 +15,16 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/hyperledger/fabric/bccsp"
 	"github.com/pkg/errors"
 )
 
 func (msp *bccspmsp) validateIdentity(id *identity) error {
+	if bccsp.IsGostCert(msp.bccsp, id.cert.Raw) {
+		mspLogger.Warnf("GOST cert used (SKIP VALIDATE TODO)")
+		return nil
+	}
+
 	id.validationMutex.Lock()
 	defer id.validationMutex.Unlock()
 

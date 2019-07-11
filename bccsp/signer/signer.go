@@ -42,6 +42,10 @@ func New(csp bccsp.BCCSP, key bccsp.Key) (crypto.Signer, error) {
 		return nil, errors.Wrap(err, "failed getting public key")
 	}
 
+	if bccsp.IsGostKey(csp, pub) {
+		return &bccspCryptoSigner{csp, key, pub}, nil
+	}
+
 	raw, err := pub.Bytes()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed marshalling public key")

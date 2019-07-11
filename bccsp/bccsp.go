@@ -132,3 +132,35 @@ type BCCSP interface {
 	// The opts argument should be appropriate for the algorithm used.
 	Decrypt(k Key, ciphertext []byte, opts DecrypterOpts) (plaintext []byte, err error)
 }
+
+// BCCSPGOST interface specific for GOST
+type BCCSPGOST interface {
+	// IsGostCert checks cert is GOST
+	IsGostCert(cert []byte) bool
+	// IsGostKey checks key is GOST
+	IsGostKey(k Key) bool
+}
+
+// IsGost determines csp is BCCSPGOST
+func IsGost(csp interface{}) bool {
+	_, ok := csp.(BCCSPGOST)
+	return ok
+}
+
+// IsGostCert determines cert is GOST
+func IsGostCert(csp interface{}, cert []byte) bool {
+	gostcsp, ok := csp.(BCCSPGOST)
+	if ok {
+		return gostcsp.IsGostCert(cert)
+	}
+	return false
+}
+
+// IsGostKey determines key is GOST
+func IsGostKey(csp interface{}, k Key) bool {
+	gostcsp, ok := csp.(BCCSPGOST)
+	if ok {
+		return gostcsp.IsGostKey(k)
+	}
+	return false
+}

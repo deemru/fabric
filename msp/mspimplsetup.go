@@ -99,6 +99,13 @@ func (msp *bccspmsp) setupCrypto(conf *m.FabricMSPConfig) error {
 		mspLogger.Debugf("CryptoConfig.IdentityIdentifierHashFunction was nil. Move to defaults.")
 	}
 
+	if bccsp.IsGost(msp.bccsp) {
+		msp.cryptoConfig.SignatureHashFamily = bccsp.GOSTR3411_2012_256
+		mspLogger.Debugf("CryptoConfig.SignatureHashFamily was set to GOSTR3411_2012_256.")
+		msp.cryptoConfig.IdentityIdentifierHashFunction = bccsp.GOSTR3411_2012_256
+		mspLogger.Debugf("CryptoConfig.IdentityIdentifierHashFunction was set to GOSTR3411_2012_256.")
+	}
+
 	return nil
 }
 
